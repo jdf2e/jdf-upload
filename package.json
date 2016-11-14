@@ -1,0 +1,27 @@
+{
+  "name": "jdf-upload",
+  "version": "0.1.0",
+  "description": "jdf upload module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdf2e/jdf-upload.git"
+  },
+  "keywords": [
+    "jdf",
+    "upload"
+  ],
+  "author": "catalsdevelop@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jdf2e/jdf-upload/issues"
+  },
+  "homepage": "https://github.com/jdf2e/jdf-upload#readme",
+  "dependencies": {
+    "fs-path": "0.0.22",
+    "glob": "^7.1.1",
+    "q": "^1.4.1",
+    "request": "^2.78.0",
+    "scp2": "^0.5.0"
+  }
+}
