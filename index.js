@@ -27,33 +27,37 @@ module.exports = function (dir, options, jdf) {
     }
   }
 
-  var uploadSource = path.resolve(process.cwd(), jdf.config.outputDirName);
-  var uploadTarget = jdf.config.serverDir;
-
-  var engine = Uploader.create(type, {
-    host: jdf.config.host,
-    user: jdf.config.user,
-    password: jdf.config.password,
-    port: jdf.config.port || jdf.config.upload.port || (type == 'http' ? 3000 : (type == 'ftp' ? 21 : 22)),
-    rootPrefix: jdf.config.upload.rootPrefix
-  });
+  const uploadSource = path.resolve(process.cwd(), jdf.config.outputDirName); // 编译后文件的根目录
+  let targetServerPath = jdf.config.serverDir; // 远程接收文件的根路径，具体到某个域名对应的文件夹，根据服务器的配置来定
+  const projectPath = jdf.config.projectPath.slice(-1) == '/' ? jdf.config.projectPath : jdf.config.projectPath + '/'; // 项目目录带版本号信息
 
   if (options.preview && jdf.config.previewServerDir) {
-    uploadTarget = jdf.config.previewServerDir;
+    targetServerPath = jdf.config.previewServerDir;
   } else if (options.nc && jdf.config.newcdn) {
     jdf.config.cdn = jdf.config.newcdn;
   } else if (options.nh && jdf.config.newcdn) {
     // 内链link src替换
     jdf.config.cdnDefalut = jdf.config.cdn;
     jdf.config.cdn = jdf.config.newcdn;
-    uploadTarget = jdf.config.previewServerDir;
+    targetServerPath = jdf.config.previewServerDir;
   } else if (options.list && jdf.config.uploadList) {
     // 根据config.json配置上传 todo 到底是根据用户命令行的list还是根据config.json的list呢
     options.list = jdf.config.uploadList;
   }
 
-  // engine.startUpload(uploadSource, uploadTarget);return;
+  const engine = Uploader.create(type, {
+    host: jdf.config.host,
+    user: jdf.config.user,
+    password: jdf.config.password,
+    port: jdf.config.port || jdf.config.upload.port || (type == 'http' ? 3000 : (type == 'ftp' ? 21 : 22)),
+    rootPrefix: jdf.config.upload.rootPrefix, // scp和http方式上传的时候会用到来拼接远程的地址
+    root: uploadSource,
+    target: targetServerPath,
+    projectPath: projectPath
+  });
+
+  // engine.startUpload(dir);return;
   jdf.output(dir, options, function () {
-    engine.startUpload(uploadSource, uploadTarget);
+    engine.startUpload(dir);
   });
 }

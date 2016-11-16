@@ -17,14 +17,17 @@ module.exports = class Scp extends Base {
     // });
   }
 
-  upload(source, target) {
+  upload(root, target, upPath) {
+    const uploadInfo = this.getUploadInfo(upPath);
+
     return new Promise((resolve, reject) => {
-      scp2.scp(source, {
+      // scp2直接支持文件到文件和目录到目录的复制
+      scp2.scp(path.resolve(root, uploadInfo.path), {
         host: this.options.host,
         username: this.options.user,
         password: this.options.password,
         port: this.options.port,
-        path: path.join(this.options.rootPrefix, target, '/').replace(/\\/g,'/') // 别管什么系统，全部转换到*inx路径上
+        path: path.join(this.options.rootPrefix, target, uploadInfo.path)
       }, this.client, (err) => {
         if (err) {
           reject(err);

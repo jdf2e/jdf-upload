@@ -153,8 +153,8 @@ module.exports = class Ftp extends Base {
     });
   }
 
-  upload(source, target) {
-    var files = getFiles(source, target);
+  upload(root, target, upPath) {
+    var files = this._getFiles(root, target, upPath);
     // files.forEach(function(file) {
     //     console.log(file.source, file.target);
     // });return;
@@ -179,27 +179,28 @@ module.exports = class Ftp extends Base {
         });
     });
   }
-}
 
-/**
- * 遍历本地文件，获取所有的文件和文件夹，类似walk的功能
- * @param source
- * @param target
- * @param files
- */
-function getFiles(source, target){
-  const files = glob.sync('**/*', {
-    cwd: source
-  });
+  /**
+   * 遍历本地文件，获取所有的文件和文件夹，类似walk的功能
+   * @param root
+   * @param target
+   * @param upPath
+   */
+  _getFiles(root, target, upPath){
+    const uploadInfo = this.getUploadInfo(upPath);
+    const files = glob.sync(uploadInfo.glob, {
+      cwd: root
+    });
 
-  return files.map((file) => {
-    const subSourcePath = path.resolve(source, file);
-    const subTargetPath = target + '/' + file; //服务器都是linux，或者ftp服务，所以此处路径直接拼接
-    const type = fs.lstatSync(subSourcePath).isDirectory() ? 'dir' : 'file';
-    return {
-      source: subSourcePath,
-      target: subTargetPath,
-      type: type
-    };
-  });
+    return files.map((file) => {
+      const subSourcePath = path.resolve(root, file);
+      const subTargetPath = target + '/' + file; //服务器都是linux，或者ftp服务，所以此处路径直接拼接
+      const type = fs.lstatSync(subSourcePath).isDirectory() ? 'dir' : 'file';
+      return {
+        source: subSourcePath,
+        target: subTargetPath,
+        type: type
+      };
+    });
+  }
 }

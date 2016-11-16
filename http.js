@@ -5,6 +5,7 @@ const Base = require('./baseUploader');
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
+const base = require('jdf-file').$;
 
 module.exports = class Http extends Base {
   constructor(options) {
@@ -13,10 +14,12 @@ module.exports = class Http extends Base {
     this.uploadPath = `http://${options.host}:${options.port}/`;
   }
 
-  upload(source, target) {
+  upload(root, target, upPath) {
+    const uploadInfo = this.getUploadInfo(upPath);
+
     return new Promise((resolve, reject) => {
-      glob('**/*', {
-        cwd: source,
+      glob(uploadInfo.glob, {
+        cwd: root,
         nodir: true,
       }, (err, files) => {
         if (err) {
@@ -24,11 +27,13 @@ module.exports = class Http extends Base {
         }
         else {
           let formData = {};
-          const remotePrefix = path.join(this.options.rootPrefix, target, '/').replace(/\\/g,'/')
+          const remotePrefix = base.pathJoin(path.join(this.options.rootPrefix, target, '/'));
+
           files.forEach((file) => {
-            formData[remotePrefix + file] = fs.createReadStream(path.resolve(source, file));
+            formData[remotePrefix + file] = fs.createReadStream(path.resolve(root, file));
           });
-          request.post({url:this.uploadPath, formData: formData}, (err, res, body) => {
+
+          request.post({url:this.uploadPath, formData: formData}, (err, res) => {
             if (err) {
               reject(err);
             }

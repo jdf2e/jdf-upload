@@ -1,6 +1,6 @@
 {
   "name": "jdf-upload",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "jdf upload module",
   "main": "index.js",
   "repository": {
@@ -20,8 +20,11 @@
   "dependencies": {
     "fs-path": "0.0.22",
     "glob": "^7.1.1",
+    "jdf-file": "^1.0.3",
     "q": "^1.4.1",
+    "readable-stream": "1.1.14",
     "request": "^2.78.0",
-    "scp2": "^0.5.0"
+    "scp2": "^0.5.0",
+    "xregexp": "2.0.0"
   }
 }
