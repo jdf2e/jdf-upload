@@ -4,7 +4,6 @@ const glob = require('glob');
 const fsPath = require('fs-path');
 const FTP = require('./node-ftp/connection');
 const Base = require('./baseUploader');
-const Q = require('q');
 
 module.exports = class Ftp extends Base {
   constructor(options) {
@@ -56,13 +55,15 @@ module.exports = class Ftp extends Base {
     return new Promise((resolve, reject) => {
       this.connect()
         .then(() => {
-          this.client.get(source, function (err, stream) {
+          this.client.get(source, (err, stream) => {
             if (err) {
               this.client.end();
-              reject(new Error('jdf error [ftp.get] - ' + target + ' - ' + err));
+              reject(new Error('[ftp.get] - ' + target + ' - ' + err.message));
             } else {
               stream.pipe(fs.createWriteStream(target));
-              resolve();
+              stream.once('end', () => {
+                resolve();
+              });
             }
           });
         });
@@ -113,7 +114,7 @@ module.exports = class Ftp extends Base {
                 resolve(filesList);
               } else {
                 this.client.end();
-                reject(new Error('jdf warnning : "' + source + '" is not exists'));
+                reject(new Error(`'${source}' is not exists`));
               }
             }
           });
@@ -123,7 +124,7 @@ module.exports = class Ftp extends Base {
 
   download(source, target) {
     return new Promise((resolve, reject) => {
-      this.listMain(source)
+      this.list(source)
         .then((data) => {
           if (data instanceof Error) {
             reject(data);
@@ -142,7 +143,7 @@ module.exports = class Ftp extends Base {
                   localNum++;
                 });
               });
-            }, Q()).then(() => {
+            }, Promise.resolve()).then(() => {
               this.client.end();
               if (serverNum == localNum) {
                 resolve();
@@ -172,7 +173,7 @@ module.exports = class Ftp extends Base {
                 return this.put(info.source, info.target);
               }
             })
-          }, Q()).then(() => {
+          }, Promise.resolve()).then(() => {
             this.client.end();
             resolve();
           });
@@ -194,7 +195,7 @@ module.exports = class Ftp extends Base {
 
     return files.map((file) => {
       const subSourcePath = path.resolve(root, file);
-      const subTargetPath = target + '/' + file; //服务器都是linux，或者ftp服务，所以此处路径直接拼接
+      const subTargetPath = base.pathJoin(target, file);
       const type = fs.lstatSync(subSourcePath).isDirectory() ? 'dir' : 'file';
       return {
         source: subSourcePath,
