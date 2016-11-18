@@ -7,6 +7,11 @@
     "type": "git",
     "url": "git+https://github.com/jdf2e/jdf-upload.git"
   },
+  "scripts": {
+    "lint": "eslint src/**/* index.js",
+    "publish": "npm publish . && npm publish . --tag latest",
+    "unit": "cross-env NODE_ENV=test karma start test/karma.conf.js --single-run"
+  },
   "keywords": [
     "jdf",
     "upload"
@@ -25,5 +30,15 @@
     "request": "^2.78.0",
     "scp2": "^0.5.0",
     "xregexp": "2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.10.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0"
   }
 }

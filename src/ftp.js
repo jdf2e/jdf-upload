@@ -1,9 +1,12 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 const fsPath = require('fs-path');
-const FTP = require('./node-ftp/connection');
+const FTP = require('./../node-ftp/connection');
 const Base = require('./baseUploader');
+const base = require('jdf-file').$;
 
 module.exports = class Ftp extends Base {
   constructor(options) {
@@ -30,19 +33,17 @@ module.exports = class Ftp extends Base {
 
   mkdir(source) {
     return new Promise((resolve, reject) => {
-      if (typeof(source) == 'undefined') {
+      if (typeof source === 'undefined') {
         this.client.end();
         reject(new Error('jdf error [ftp.mkdir] source is not exists'));
-      }
-      else {
+      } else {
         this.connect()
           .then(() => {
-            this.client.mkdir(source, true, err => {
+            this.client.mkdir(source, true, (err) => {
               if (err) {
                 this.client.end();
                 reject(err);
-              }
-              else {
+              } else {
                 resolve();
               }
             });
@@ -58,7 +59,7 @@ module.exports = class Ftp extends Base {
           this.client.get(source, (err, stream) => {
             if (err) {
               this.client.end();
-              reject(new Error('[ftp.get] - ' + target + ' - ' + err.message));
+              reject(new Error(`[ftp.get] - ${target} - ${err.message}`));
             } else {
               stream.pipe(fs.createWriteStream(target));
               stream.once('end', () => {
@@ -72,10 +73,10 @@ module.exports = class Ftp extends Base {
 
   put(source, target) {
     return new Promise((resolve, reject) => {
-      this.client.put(source, target, err => {
+      this.client.put(source, target, (err) => {
         if (err) {
           this.client.end();
-          reject(new Error('jdf error [ftp.put] - ' + target + ' - ' + err));
+          reject(new Error(`jdf error [ftp.put] - ${target} - ${err}`));
         } else {
           resolve();
         }
@@ -84,7 +85,7 @@ module.exports = class Ftp extends Base {
   }
 
   list(source) {
-    if (typeof(source) == 'undefined') {
+    if (typeof source === 'undefined') {
       source = './';
     }
 
@@ -96,19 +97,19 @@ module.exports = class Ftp extends Base {
               this.client.end();
               reject(err);
             } else {
-              if (list && list.length > 0) {
-                var filesList = [];
+              if (list && list.length > 0) {// eslint-disable-line
+                const filesList = [];
                 list.forEach((data) => {
-                  var fileType = '';
-                  if (data.type == '-') {
+                  let fileType = '';
+                  if (data.type === '-') {
                     fileType = 'file';
-                  } else if (data.type == 'd') {
+                  } else if (data.type === 'd') {
                     fileType = 'dir';
                   }
 
                   filesList.push({
                     name: data.name,
-                    type: fileType
+                    type: fileType,
                   })
                 });
                 resolve(filesList);
@@ -129,38 +130,40 @@ module.exports = class Ftp extends Base {
           if (data instanceof Error) {
             reject(data);
           } else {
-            fsPath.mkdirSync(target); //先创建本地的文件夹，再下载
-            let serverNum = 0, localNum = 0;
+            fsPath.mkdirSync(target); // 先创建本地的文件夹，再下载
+            let serverNum = 0;
+            let localNum = 0;
 
-            data.filter((item) => item.type === 'file')
+            data.filter(item => item.type === 'file')
               .reduce((prev, item) => {
-              return prev.then(() => {
-                serverNum++;
-                var sourcePut = source + '/' + item.name;
-                var targetPut = target + '/' + item.name;
+                return prev.then(() => {
+                  serverNum += 1;
+                  const sourcePut = base.joinPath(source, item.name);
+                  const targetPut = base.joinPath(target, item.name);
 
-                return this.get(sourcePut, targetPut, function() {
-                  localNum++;
+                  return this.get(sourcePut, targetPut, () => {
+                    localNum += 1;
+                  });
                 });
+              }, Promise.resolve())
+              .then(function() {
+                this.client.end();
+                if (serverNum === localNum) {
+                  resolve();
+                }
               });
-            }, Promise.resolve()).then(() => {
-              this.client.end();
-              if (serverNum == localNum) {
-                resolve();
-              }
-            });
           }
         });
     });
   }
 
   upload(root, target, upPath) {
-    var files = this._getFiles(root, target, upPath);
+    const files = this.getFiles(root, target, upPath);
     // files.forEach(function(file) {
     //     console.log(file.source, file.target);
     // });return;
-    //远程先创建文件夹，再创建文件
-    return new Promise((resolve, reject) => {
+    // 远程先创建文件夹，再创建文件
+    return new Promise((resolve) => {
       this.connect()
         .then(() => {
           return files.reduce((prev, info) => {
@@ -169,9 +172,7 @@ module.exports = class Ftp extends Base {
               if (info.type === 'dir') {
                 return this.mkdir(info.target);
               }
-              else {
-                return this.put(info.source, info.target);
-              }
+              return this.put(info.source, info.target);
             })
           }, Promise.resolve()).then(() => {
             this.client.end();
@@ -187,10 +188,10 @@ module.exports = class Ftp extends Base {
    * @param target
    * @param upPath
    */
-  _getFiles(root, target, upPath){
+  getFiles(root, target, upPath) {
     const uploadInfo = this.getUploadInfo(upPath);
     const files = glob.sync(uploadInfo.glob, {
-      cwd: root
+      cwd: root,
     });
 
     return files.map((file) => {
@@ -200,7 +201,7 @@ module.exports = class Ftp extends Base {
       return {
         source: subSourcePath,
         target: subTargetPath,
-        type: type
+        type: type,
       };
     });
   }

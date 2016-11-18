@@ -1,4 +1,5 @@
 'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const base = require('jdf-file').$;
@@ -11,10 +12,10 @@ module.exports = class BaseUploader {
   startUpload(upPath) {
     this.upload(this.options.root, this.options.target, upPath)
       .then(() => {
-        const remotePath = this.options.host + '/' + this.options.target;
+        const remotePath = base.pathJoin(this.options.host, this.options.target);
         console.log(`jdf upload [${remotePath}] success!`);
       })
-      .catch((err) =>{
+      .catch((err) => {
         console.log(err.message);
       });
   }
@@ -25,8 +26,8 @@ module.exports = class BaseUploader {
    * @param target
    * @param upPath
    */
-  upload(root, target, upPath) {
-    throw new Error(`upload() in BaseUploader is an abstract method`);
+  upload(root, target, upPath) { // eslint-disable-line
+    throw new Error('upload() in BaseUploader is an abstract method');
   }
 
   /**
@@ -43,23 +44,23 @@ module.exports = class BaseUploader {
     upPath = base.pathJoin(path.join(projectPath, upPath));
     if (stat.isFile()) {
       return {
-        type:'file',
+        type: 'file',
         path: upPath,
-        glob: upPath
+        glob: upPath,
       }
-    }
-    if (stat.isDirectory()) {
-      upPath = upPath.slice(-1) == '/' ? upPath : upPath + '/';
+    } else if (stat.isDirectory()) {
+      upPath = upPath.slice(-1) === '/' ? upPath : `${upPath}/`;
       return {
         type: 'dir',
         path: upPath,
-        glob: upPath + '**'
+        glob: `${upPath}**`,
       }
     }
+    return null;
   }
 
   static create(type, options) {
-    const uploader = require(`./${type}`);
-    return new uploader(options);
+    const Uploader = require(`./${type}`); // eslint-disable-line
+    return new Uploader(options);
   }
 }

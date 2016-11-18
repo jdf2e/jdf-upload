@@ -27,17 +27,15 @@ module.exports = class Scp extends Base {
         username: this.options.user,
         password: this.options.password,
         port: this.options.port,
-        path: path.join(this.options.rootPrefix, target, uploadInfo.path)
+        path: path.join(this.options.rootPrefix, target, uploadInfo.path),
       }, this.client, (err) => {
         if (err) {
           reject(err);
-        }
-        else {
+        } else {
           this.client.close();
           resolve()
         }
       })
     })
-
   }
 }

@@ -24,23 +24,20 @@ module.exports = class Http extends Base {
       }, (err, files) => {
         if (err) {
           reject(err);
-        }
-        else {
-          let formData = {};
+        } else {
+          const formData = {};
           const remotePrefix = base.pathJoin(path.join(this.options.rootPrefix, target, '/'));
 
           files.forEach((file) => {
             formData[remotePrefix + file] = fs.createReadStream(path.resolve(root, file));
           });
 
-          request.post({url:this.uploadPath, formData: formData}, (err, res) => {
-            if (err) {
-              reject(err);
-            }
-            else if (res.statusCode !== 200) {
+          request.post({ url: this.uploadPath, formData: formData }, (error, res) => {
+            if (error) {
+              reject(error);
+            } else if (res.statusCode !== 200) {
               reject(new Error(`remote server status error, code ${res.statusCode}`))
-            }
-            else {
+            } else {
               resolve();
             }
           });
