@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const base = require('jdf-file').$;
+const base = require('jdf-file').base;
 
 module.exports = class BaseUploader {
   constructor(options) {
@@ -10,7 +10,7 @@ module.exports = class BaseUploader {
   }
 
   startUpload(upPath) {
-    this.upload(this.options.root, this.options.target, upPath)
+    return this.upload(this.options.root, this.options.target, upPath)
       .then(() => {
         const remotePath = base.pathJoin(this.options.host, this.options.target);
         console.log(`jdf upload [${remotePath}] success!`);
@@ -41,7 +41,7 @@ module.exports = class BaseUploader {
     const projectPath = this.options.projectPath;
     const absUpPath = path.resolve(root, projectPath, upPath);
     const stat = fs.statSync(absUpPath);
-    upPath = base.pathJoin(path.join(projectPath, upPath));
+    upPath = base.pathJoin(projectPath, upPath);
     if (stat.isFile()) {
       return {
         type: 'file',

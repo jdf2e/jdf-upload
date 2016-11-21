@@ -1,6 +1,6 @@
 {
   "name": "jdf-upload",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "jdf upload module",
   "main": "index.js",
   "repository": {
@@ -8,9 +8,9 @@
     "url": "git+https://github.com/jdf2e/jdf-upload.git"
   },
   "scripts": {
-    "lint": "eslint src/**/* index.js",
-    "publish": "npm publish . && npm publish . --tag latest",
-    "unit": "cross-env NODE_ENV=test karma start test/karma.conf.js --single-run"
+    "lint": "eslint src/**/*.js index.js",
+    "publish": "npm publish",
+    "unit": "mocha --ui bdd -R spec -t 5000 --watch test/**/*Test.js"
   },
   "keywords": [
     "jdf",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-properties": "^1.2.1",
     "eslint": "^3.10.2",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",

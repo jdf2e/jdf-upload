@@ -4,9 +4,9 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 const fsPath = require('fs-path');
-const FTP = require('./../node-ftp/connection');
+const FTP = require('./node-ftp/connection');
 const Base = require('./baseUploader');
-const base = require('jdf-file').$;
+const base = require('jdf-file').base;
 
 module.exports = class Ftp extends Base {
   constructor(options) {
@@ -192,12 +192,20 @@ module.exports = class Ftp extends Base {
     const uploadInfo = this.getUploadInfo(upPath);
     const files = glob.sync(uploadInfo.glob, {
       cwd: root,
+      mark: true,
     });
 
+    // 如果只上传一个文件，那么增加他的父文件夹，确保node-ftp先创建文件夹再创建文件
+    if (files.length === 1) {
+      const stat = fs.statSync(path.resolve(root, files[0]));
+      if (stat.isFile()) {
+        files.unshift(`${path.dirname(files[0])}/`);
+      }
+    }
     return files.map((file) => {
       const subSourcePath = path.resolve(root, file);
       const subTargetPath = base.pathJoin(target, file);
-      const type = fs.lstatSync(subSourcePath).isDirectory() ? 'dir' : 'file';
+      const type = fs.statSync(subSourcePath).isDirectory() ? 'dir' : 'file';
       return {
         source: subSourcePath,
         target: subTargetPath,

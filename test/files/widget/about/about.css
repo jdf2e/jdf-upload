@@ -1,0 +1,25 @@
+.about-wrap {
+    padding: 0 20px;
+}
+.about-hd h2 {
+    display: block;
+    padding-left: 28px;
+}
+.about-hd .intro {
+    background: url(i/i-intro.png) no-repeat 0 center;
+}
+.about-hd .contact {
+    background: url(i/i-contactus.png) no-repeat 0 center;
+    background-size: 19px 19px;
+}
+.about-bd {
+    padding: 16px 0px 35px 0;
+}
+.about-bd p {
+    line-height: 24px;
+    font-family: '宋体','Helvetica Neue',Helvetica,STHeiTi,Arial,sans-serif;
+    text-indent:2em;
+}
+.about-bd a {
+    color: #3b99f1;
+}

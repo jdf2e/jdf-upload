@@ -1,0 +1,15 @@
+{
+    "host": "192.168.153.93",
+    "user": "user",
+    "password": "user",
+    "previewServerDir": "test.jd.com",
+    "projectPath": "product/index/1.0.0/",
+    "cdn": "//misc.360buyimg.com",
+    "outputDirName": "build",
+    "upload": {
+        "host": "192.168.153.93",
+        "user": "arch",
+        "password": "arch",
+        "rootPrefix": "/var/www/html/"
+    }
+}

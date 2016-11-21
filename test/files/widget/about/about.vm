@@ -1,0 +1,19 @@
+<div class="block w1210 about-content">
+    <div class="about-wrap">
+        <div class="block-hd about-hd">
+            <h2 class="intro">产品介绍</h2>
+        </div>
+        <div class="block-bd about-bd">
+            <p>本产品利用京东覆盖产业链上下游的丰富数据资源，借助电商全数据链优势，大数据平台，借鉴宏观经济指标建立多层次、多维度的深度洞察指数体系，包含购买力、采购、物流、价格、消费者、商品等诸多体系的综合指数，从地域、行业、用户画像等多维度深入挖掘，给广大使用者提供多角度的数据盛宴。</p>
+            <p>通过总指数、分类指数、维度指数及细分指标来综合度量以京东商城为代表的电商零售平台在购买力、采购、物流、价格、消费者、商品等方面的综合发展、变化趋势、结构组成等情况。</p>
+        </div>
+
+        <div class="block-hd about-hd">
+            <h2 class="contact">联系我们</h2>
+        </div>
+        <div class="block-bd about-bd">
+            <p>如您对京东指数有任何意见或建议，请发邮件到“<a href="mailto:zhishu@jd.com">zhishu@jd.com</a>”。您的反馈是我们不断优化、前行的动力。</p>
+            <p>愿在大数据时代，京东指数与您共同洞察经济趋势。</p>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@
 const scp2 = require('scp2');
 const Base = require('./baseUploader');
 const path = require('path');
+const base = require('jdf-file').base;
 /**
  * sftp的方式，需要使用ssh账户和密码，配置对应的权限，特别是nginx的目录权限
  */
@@ -14,6 +15,9 @@ module.exports = class Scp extends Base {
     this.client = new scp2.Client();
     // this.client.on('write', (obj) => {
     //   console.log(obj.destination);
+    // });
+    // this.client.on('mkdir', (obj) => {
+    //   console.log(obj);
     // });
   }
 
@@ -27,7 +31,7 @@ module.exports = class Scp extends Base {
         username: this.options.user,
         password: this.options.password,
         port: this.options.port,
-        path: path.join(this.options.rootPrefix, target, uploadInfo.path),
+        path: base.pathJoin(this.options.rootPrefix, target, uploadInfo.path),
       }, this.client, (err) => {
         if (err) {
           reject(err);
