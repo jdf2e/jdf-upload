@@ -1,6 +1,8 @@
 # jdf-upload
 jdf上传模块，包含ftp scp 和http
 
+[![Build Status](https://travis-ci.org/jdf2e/jdf-upload.svg?branch=master)](https://travis-ci.org/jdf2e/jdf-upload)
+
 ## How
 ``` js
 const upload = require('jdf-upload');

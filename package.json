@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint src/**/*.js index.js",
     "publish": "npm publish",
-    "unit": "mocha --ui bdd -R spec -t 5000 --watch test/**/*Test.js"
+    "unit": "mocha --ui bdd -R spec -t 5000 test/**/*Test.js"
   },
   "keywords": [
     "jdf",
