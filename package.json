@@ -10,8 +10,10 @@
   "scripts": {
     "lint": "eslint src/**/*.js index.js",
     "publish": "npm publish",
-    "unit": "mocha --ui bdd -R spec -t 5000 test/**/*Test.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -x src/node-ftp/* -- --report lcovonly -t 5000 test/**/*Test.js && cat ./coverage/lcov.info | coveralls"
+    "unit": "mocha --ui bdd -R spec -t 3000 test/**/*Test.js",
+    "unit:watch": "mocha --ui bdd -R spec -t 3000 --watch test/**/*Test.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -x src/node-ftp/* -- --report lcovonly -t 5000 test/**/*Test.js",
+    "coverall": "npm run cover && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [
     "jdf",
