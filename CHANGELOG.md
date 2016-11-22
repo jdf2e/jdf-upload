@@ -1,5 +1,17 @@
 changelog
 
+## 0.1.5
+
+* 增加travis和covercell
+
+## 0.1.4
+
+* 增加了三个模块的单元测试
+
+## 0.1.3
+
+* 增加了eslint代码验证
+
 ## 0.1.2
 * ftp.js中的get方法可以在文件写入完毕后resolve，确保执行顺序
 * 去掉了对q.js的依赖，全部用原生Promise

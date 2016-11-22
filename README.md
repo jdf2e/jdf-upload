@@ -1,7 +1,7 @@
 # jdf-upload
 jdf上传模块，包含ftp scp 和http
 
-[![Build Status](https://travis-ci.org/jdf2e/jdf-upload.svg?branch=master)](https://travis-ci.org/jdf2e/jdf-upload)
+[![Build Status](https://travis-ci.org/jdf2e/jdf-upload.svg?branch=master)](https://travis-ci.org/jdf2e/jdf-upload) [![Coverage Status](https://coveralls.io/repos/github/jdf2e/jdf-upload/badge.svg)](https://coveralls.io/github/jdf2e/jdf-upload)
 
 ## How
 ``` js
