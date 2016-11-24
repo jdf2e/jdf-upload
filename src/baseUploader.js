@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const base = require('jdf-file').base;
+const logger = require('jdf-log');
 
 module.exports = class BaseUploader {
   constructor(options) {
@@ -13,10 +14,10 @@ module.exports = class BaseUploader {
     return this.upload(this.options.root, this.options.target, upPath)
       .then(() => {
         const remotePath = base.pathJoin(this.options.host, this.options.target);
-        console.log(`jdf upload [${remotePath}] success!`);
+        logger.info(`upload to ${remotePath} success!`);
       })
       .catch((err) => {
-        console.log(err.message);
+        logger.error(err.message);
       });
   }
 
@@ -42,21 +43,23 @@ module.exports = class BaseUploader {
     const absUpPath = path.resolve(root, projectPath, upPath);
     const stat = fs.statSync(absUpPath);
     upPath = base.pathJoin(projectPath, upPath);
+    let info = null;
     if (stat.isFile()) {
-      return {
+      info = {
         type: 'file',
         path: upPath,
         glob: upPath,
       }
     } else if (stat.isDirectory()) {
       upPath = upPath.slice(-1) === '/' ? upPath : `${upPath}/`;
-      return {
+      info = {
         type: 'dir',
         path: upPath,
         glob: `${upPath}**`,
       }
     }
-    return null;
+    logger.debug('uploadInfo: %j', info);
+    return info;
   }
 
   static create(type, options) {

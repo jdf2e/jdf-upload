@@ -1,5 +1,9 @@
 changelog
 
+## 0.1.6
+
+* 替换日志模块，把原来的console.*替换到jdf-log上
+
 ## 0.1.5
 
 * 增加travis和covercell

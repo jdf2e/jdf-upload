@@ -6,12 +6,14 @@ const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
 const base = require('jdf-file').base;
+const logger = require('jdf-log');
 
 module.exports = class Http extends Base {
   constructor(options) {
     super(options);
     // 需要在服务器端做好配置入口
     this.uploadPath = `http://${options.host}:${options.port}/`;
+    logger.debug('http mode used');
   }
 
   upload(root, target, upPath) {
@@ -30,6 +32,7 @@ module.exports = class Http extends Base {
 
           files.forEach((file) => {
             formData[remotePrefix + file] = fs.createReadStream(path.resolve(root, file));
+            logger.verbose(`source:${path.resolve(root, file)} target:${remotePrefix + file}`);
           });
 
           request.post({ url: this.uploadPath, formData: formData }, (error, res) => {

@@ -2,14 +2,26 @@
 
 const Uploader = require('./src/baseUploader');
 const path = require('path');
+const logger = require('jdf-log');
+
+const taskStart = () => {
+  logger.profile('upload');
+};
+
+const taskEnd = taskStart;
 
 module.exports = function (dir, options, jdf) {
+  taskStart();
+  if (options.logLevel) {
+    logger.level(options.logLevel);
+  }
+
   const type = options.type || jdf.upload.type;
 
   // 如果输入的上传类型不对就退出
   if (['ftp', 'scp', 'http'].indexOf(type) === -1) {
-    console.log(`jdf error: unknown upload type '${type}'`);
-    return;
+    logger.error(`unknown upload type '${type}'`);
+    return taskEnd();
   }
 
   // 如果没有配置过上传的参数，也退出
@@ -17,12 +29,12 @@ module.exports = function (dir, options, jdf) {
     if (jdf.config[k] === JSON.parse(jdf.config.configJsonFileContent)[k]
       ||
       (!jdf.config[k] && !jdf.config.upload[k])) {
-      console.log(`jdf error: config.json value of "${k}" error`);
-      return;
+      logger.error(`config.json value of "${k}" error`);
+      return taskEnd();
     }
     // 如果现在参数还在根节点下，就给出警告
     if (!jdf.config.upload[k]) {
-      console.warn(`jdf warn: the key '${k}' in the root node of config.json should be moved to the 'upload' node`);
+      logger.warn(`the key '${k}' in the root node of config.json should be moved to the 'upload' node`);
     } else {
       jdf.config[k] = jdf.config.upload[k];
     }
@@ -57,8 +69,8 @@ module.exports = function (dir, options, jdf) {
     projectPath: projectPath,
   });
 
-  // engine.startUpload(dir);return;
+  // engine.startUpload(dir).then(taskEnd);return;
   jdf.output(dir, options, () => {
-    engine.startUpload(dir);
+    engine.startUpload(dir).then(taskEnd);
   });
 }
