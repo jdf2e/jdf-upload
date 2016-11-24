@@ -7,12 +7,14 @@ const fsPath = require('fs-path');
 const FTP = require('./node-ftp/connection');
 const Base = require('./baseUploader');
 const base = require('jdf-file').base;
+const logger = require('jdf-log');
 
 module.exports = class Ftp extends Base {
   constructor(options) {
     // host user password 必须提供
     super(options);
     this.client = new FTP();
+    logger.debug('ftp mode used');
   }
 
   connect() {
@@ -168,7 +170,7 @@ module.exports = class Ftp extends Base {
         .then(() => {
           return files.reduce((prev, info) => {
             return prev.then(() => {
-              // console.log(info.target);
+              logger.verbose(`${info.type} source:${info.source} target:${info.target}`);
               if (info.type === 'dir') {
                 return this.mkdir(info.target);
               }

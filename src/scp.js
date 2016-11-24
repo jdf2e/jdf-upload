@@ -4,6 +4,8 @@ const scp2 = require('scp2');
 const Base = require('./baseUploader');
 const path = require('path');
 const base = require('jdf-file').base;
+const logger = require('jdf-log');
+
 /**
  * sftp的方式，需要使用ssh账户和密码，配置对应的权限，特别是nginx的目录权限
  */
@@ -13,12 +15,13 @@ module.exports = class Scp extends Base {
     // 此处参考源代码https://github.com/spmjs/node-scp2/blob/master/lib/scp.js 的最后，把client对象传递进去
     // 源代码内已经注册error事件到scp函数的callback中，这里注册监听write方法可以获取哪些文件被写入了
     this.client = new scp2.Client();
-    // this.client.on('write', (obj) => {
-    //   console.log(obj.destination);
-    // });
-    // this.client.on('mkdir', (obj) => {
-    //   console.log(obj);
-    // });
+    this.client.on('write', (obj) => {
+      logger.verbose(`file source:${obj.source} target:${obj.destination}`);
+    });
+    this.client.on('mkdir', (obj) => {
+      logger.verbose(`mkdir: ${obj}`);
+    });
+    logger.debug('sftp mode used');
   }
 
   upload(root, target, upPath) {
