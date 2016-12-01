@@ -6,7 +6,7 @@ const sinonChai = require('sinon-chai');
 const path = require('path');
 const Base = require('../src/baseUploader');
 const utils = require('./utils');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 const scp2 = require('scp2');
 
 chai.should();

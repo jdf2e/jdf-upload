@@ -6,7 +6,7 @@ const path = require('path');
 const Base = require('../src/baseUploader');
 const utils = require('./utils');
 const request = require('request');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 
 chai.should();
 chai.use(require('chai-properties'));

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 const logger = require('jdf-log');
 
 module.exports = class BaseUploader {

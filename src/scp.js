@@ -3,7 +3,7 @@
 const scp2 = require('scp2');
 const Base = require('./baseUploader');
 const path = require('path');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 const logger = require('jdf-log');
 
 /**

@@ -6,7 +6,7 @@ const glob = require('glob');
 const fsPath = require('fs-path');
 const FTP = require('./node-ftp/connection');
 const Base = require('./baseUploader');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 const logger = require('jdf-log');
 
 module.exports = class Ftp extends Base {

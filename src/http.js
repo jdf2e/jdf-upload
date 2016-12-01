@@ -5,7 +5,7 @@ const Base = require('./baseUploader');
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
-const base = require('jdf-file').base;
+const base = require('jdf-utils').base;
 const logger = require('jdf-log');
 
 module.exports = class Http extends Base {

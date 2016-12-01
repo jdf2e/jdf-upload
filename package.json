@@ -10,6 +10,7 @@
   "scripts": {
     "lint": "eslint src/**/*.js index.js",
     "unit": "mocha --ui bdd -R spec -t 3000 test/**/*Test.js",
+    "release": "npm version patch && npm publish && git push --follow-tags",
     "unit:watch": "mocha --ui bdd -R spec -t 3000 --watch test/**/*Test.js",
     "cover": "istanbul cover node_modules/mocha/bin/_mocha -x src/node-ftp/* -- --report lcovonly -t 5000 test/**/*Test.js",
     "coverall": "npm run cover && cat ./coverage/lcov.info | coveralls"
@@ -27,8 +28,8 @@
   "dependencies": {
     "fs-path": "0.0.22",
     "glob": "^7.1.1",
-    "jdf-file": "^1.0.3",
     "jdf-log": "0.0.2",
+    "jdf-utils": "^1.0.8",
     "readable-stream": "1.1.14",
     "request": "^2.78.0",
     "scp2": "^0.5.0",

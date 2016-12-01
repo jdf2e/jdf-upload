@@ -1,5 +1,9 @@
 changelog
 
+## 0.1.7
+
+* 替换jdf-file为jdf-utils
+
 ## 0.1.6
 
 * 替换日志模块，把原来的console.*替换到jdf-log上
