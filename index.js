@@ -1,6 +1,6 @@
 'use strict';
 
-const Uploader = require('./src/baseUploader');
+const uploader = require('./src/baseUploader');
 const path = require('path');
 const logger = require('jdf-log');
 
@@ -10,8 +10,7 @@ const taskStart = () => {
 
 const taskEnd = taskStart;
 
-module.exports = function (dir, options, jdf) {
-  taskStart();
+module.exports = function(dir, options, jdf) {
   if (options.logLevel) {
     logger.level(options.logLevel);
   }
@@ -46,19 +45,9 @@ module.exports = function (dir, options, jdf) {
 
   if (options.preview && jdf.config.previewServerDir) {
     targetServerPath = jdf.config.previewServerDir;
-  } else if (options.nc && jdf.config.newcdn) {
-    jdf.config.cdn = jdf.config.newcdn;
-  } else if (options.nh && jdf.config.newcdn) {
-    // 内链link src替换
-    jdf.config.cdnDefalut = jdf.config.cdn;
-    jdf.config.cdn = jdf.config.newcdn;
-    targetServerPath = jdf.config.previewServerDir;
-  } else if (options.list && jdf.config.uploadList) {
-    // 根据config.json配置上传 todo 到底是根据用户命令行的list还是根据config.json的list呢
-    options.list = jdf.config.uploadList;
   }
 
-  const engine = Uploader.create(type, {
+  const engine = uploader.create(type, {
     host: jdf.config.host,
     user: jdf.config.user,
     password: jdf.config.password,
@@ -68,9 +57,8 @@ module.exports = function (dir, options, jdf) {
     target: targetServerPath,
     projectPath: projectPath,
   });
-
   // engine.startUpload(dir).then(taskEnd);return;
-  jdf.output(dir, options, () => {
-    engine.startUpload(dir).then(taskEnd);
-  });
+  return jdf.output(dir, options)
+    .then(() => taskStart())
+    .then(() => engine.startUpload(dir).then(taskEnd));
 }

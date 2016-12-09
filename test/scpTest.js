@@ -30,7 +30,7 @@ describe('src/scp', () => {
       scp2.scp.restore();
     });
 
-    it('上传文件夹', () => {
+    it('上传单个文件夹', () => {
       return uploader.startUpload('widget').then(() => {
         const localPath = path.resolve(config.root, config.projectPath, 'widget');
 
@@ -57,6 +57,25 @@ describe('src/scp', () => {
           port: config.port,
           path: base.pathJoin(config.rootPrefix, config.target, config.projectPath, 'widget/about/about.css')
         });
+      });
+    });
+
+    it('上传多个文件和文件夹', () => {
+      const uploadFiles = ['widget/about/', 'js/style.js', 'css/style.css'];
+      return uploader.startUpload(uploadFiles).then(() => {
+        scpFake.calledThrice.should.be.true;
+
+        uploadFiles.forEach(p => {
+          const localPath = path.resolve(config.root, config.projectPath, p);
+
+          scpFake.should.calledWith(localPath, {
+            host: config.host,
+            username: config.user,
+            password: config.password,
+            port: config.port,
+            path: base.pathJoin(config.rootPrefix, config.target, config.projectPath, p)
+          });
+        })
       });
     });
   });

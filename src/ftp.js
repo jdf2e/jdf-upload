@@ -191,8 +191,10 @@ module.exports = class Ftp extends Base {
    * @param upPath
    */
   getFiles(root, target, upPath) {
-    const uploadInfo = this.getUploadInfo(upPath);
-    const files = glob.sync(uploadInfo.glob, {
+    let uploadGlob = this.getUploadInfo(upPath).map(info => info.glob);
+    uploadGlob = uploadGlob.length > 1 ? `{${uploadGlob.join(',')}}` : uploadGlob[0];
+
+    const files = glob.sync(uploadGlob, {
       cwd: root,
       mark: true,
     });

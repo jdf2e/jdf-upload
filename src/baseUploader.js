@@ -16,9 +16,7 @@ module.exports = class BaseUploader {
         const remotePath = base.pathJoin(this.options.host, this.options.target);
         logger.info(`upload to ${remotePath} success!`);
       })
-      .catch((err) => {
-        logger.error(err.message);
-      });
+      .catch(logger.error);
   }
 
   /**
@@ -33,33 +31,48 @@ module.exports = class BaseUploader {
 
   /**
    * 获取上传文件的信息，上传文件的类型和路径
-   * @param upPath
+   * @param Array upPath
    * @returns {*}
    */
   getUploadInfo(upPath) {
-    upPath = upPath || '';
+    if (upPath) {
+      if (Object.prototype.toString.call(upPath) === '[object Array]') {
+        upPath = upPath.length === 0 ? ['.'] : upPath;
+      } else {
+        upPath = [upPath];
+      }
+    } else {
+      upPath = ['.'];
+    }
     const root = this.options.root;
     const projectPath = this.options.projectPath;
-    const absUpPath = path.resolve(root, projectPath, upPath);
-    const stat = fs.statSync(absUpPath);
-    upPath = base.pathJoin(projectPath, upPath);
-    let info = null;
-    if (stat.isFile()) {
-      info = {
-        type: 'file',
-        path: upPath,
-        glob: upPath,
+
+    return upPath.map((item) => {
+      const filePath = path.resolve(root, projectPath, item);
+      let info = null;
+      if (!fs.existsSync(filePath)) {
+        logger.warn(`upload file ${item} is not exist`);
+      } else {
+        const stat = fs.lstatSync(filePath);
+        item = base.pathJoin(projectPath, item);
+        if (stat.isDirectory()) {
+          item = item.slice(-1) === '/' ? item : `${item}/`;
+          info = {
+            type: 'dir',
+            path: item,
+            glob: `${item}**`,
+          };
+        } else {
+          info = {
+            type: 'file',
+            path: item,
+            glob: item,
+          }
+        }
       }
-    } else if (stat.isDirectory()) {
-      upPath = upPath.slice(-1) === '/' ? upPath : `${upPath}/`;
-      info = {
-        type: 'dir',
-        path: upPath,
-        glob: `${upPath}**`,
-      }
-    }
-    logger.debug('uploadInfo: %j', info);
-    return info;
+      logger.debug('uploadInfo: %j', info);
+      return info;
+    }).filter(item => item !== null);
   }
 
   static create(type, options) {

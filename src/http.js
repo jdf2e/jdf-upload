@@ -17,10 +17,11 @@ module.exports = class Http extends Base {
   }
 
   upload(root, target, upPath) {
-    const uploadInfo = this.getUploadInfo(upPath);
+    let uploadGlob = this.getUploadInfo(upPath).map(info => info.glob);
+    uploadGlob = uploadGlob.length > 1 ? `{${uploadGlob.join(',')}}` : uploadGlob[0];
 
     return new Promise((resolve, reject) => {
-      glob(uploadInfo.glob, {
+      glob(uploadGlob, {
         cwd: root,
         nodir: true,
       }, (err, files) => {

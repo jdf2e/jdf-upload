@@ -26,20 +26,48 @@ module.exports = class Scp extends Base {
 
   upload(root, target, upPath) {
     const uploadInfo = this.getUploadInfo(upPath);
+    return Promise.all(uploadInfo.map(groupInfo => this.uploadGroup(groupInfo)))
+      .then(() => {
+        this.client.close();
+      });
+    // return new Promise((resolve, reject) => {
+    //   // scp2直接支持文件到文件和目录到目录的复制
+    //   scp2.scp(path.resolve(root, uploadInfo.path), {
+    //     host: this.options.host,
+    //     username: this.options.user,
+    //     password: this.options.password,
+    //     port: this.options.port,
+    //     path: base.pathJoin(this.options.rootPrefix, target, uploadInfo.path),
+    //   }, this.client, (err) => {
+    //     if (err) {
+    //       reject(err);
+    //     } else {
+    //       this.client.close();
+    //       resolve()
+    //     }
+    //   })
+    // })
+  }
 
+  /**
+   * 单独上传一组文件，由于scp2支持的紧紧是file->file dir->dir的方式，无法上传一组无序的文件列表，
+   * 所以需要把文件分组上传，每次上传一组，分组根据用户输入的文件组来决定，
+   * 比如，用户输入jdf u js/style.js widget，那么js/style.js上传一次和widget/**上传一次
+   * @param groupInfo
+   */
+  uploadGroup(groupInfo) {
     return new Promise((resolve, reject) => {
       // scp2直接支持文件到文件和目录到目录的复制
-      scp2.scp(path.resolve(root, uploadInfo.path), {
+      scp2.scp(path.resolve(this.options.root, groupInfo.path), {
         host: this.options.host,
         username: this.options.user,
         password: this.options.password,
         port: this.options.port,
-        path: base.pathJoin(this.options.rootPrefix, target, uploadInfo.path),
+        path: base.pathJoin(this.options.rootPrefix, this.options.target, groupInfo.path),
       }, this.client, (err) => {
         if (err) {
           reject(err);
         } else {
-          this.client.close();
           resolve()
         }
       })
