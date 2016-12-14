@@ -20,7 +20,7 @@ module.exports = function(dir, options, jdf) {
   // 如果输入的上传类型不对就退出
   if (['ftp', 'scp', 'http'].indexOf(type) === -1) {
     logger.error(`unknown upload type '${type}'`);
-    return taskEnd();
+    return;
   }
 
   // 如果没有配置过上传的参数，也退出
@@ -29,7 +29,7 @@ module.exports = function(dir, options, jdf) {
       ||
       (!jdf.config[k] && !jdf.config.upload[k])) {
       logger.error(`config.json value of "${k}" error`);
-      return taskEnd();
+      return;
     }
     // 如果现在参数还在根节点下，就给出警告
     if (!jdf.config.upload[k]) {
@@ -57,8 +57,8 @@ module.exports = function(dir, options, jdf) {
     target: targetServerPath,
     projectPath: projectPath,
   });
-  // engine.startUpload(dir).then(taskEnd);return;
+  // Promise.resolve().then(taskStart).then(() => engine.startUpload(dir)).then(taskEnd);return;
   return jdf.output(dir, options)
-    .then(() => taskStart())
-    .then(() => engine.startUpload(dir).then(taskEnd));
+    .then(taskStart)
+    .then(() => engine.startUpload(dir)).then(taskEnd);
 }

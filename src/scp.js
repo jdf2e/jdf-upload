@@ -30,23 +30,6 @@ module.exports = class Scp extends Base {
       .then(() => {
         this.client.close();
       });
-    // return new Promise((resolve, reject) => {
-    //   // scp2直接支持文件到文件和目录到目录的复制
-    //   scp2.scp(path.resolve(root, uploadInfo.path), {
-    //     host: this.options.host,
-    //     username: this.options.user,
-    //     password: this.options.password,
-    //     port: this.options.port,
-    //     path: base.pathJoin(this.options.rootPrefix, target, uploadInfo.path),
-    //   }, this.client, (err) => {
-    //     if (err) {
-    //       reject(err);
-    //     } else {
-    //       this.client.close();
-    //       resolve()
-    //     }
-    //   })
-    // })
   }
 
   /**

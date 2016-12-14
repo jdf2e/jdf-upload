@@ -1,5 +1,9 @@
 changelog
 
+## 0.1.8
+
+* 增加入口多个参数的支持，现在可以jdf u a1.js foo/a2.js bar/zoo/a3.js
+
 ## 0.1.7
 
 * 替换jdf-file为jdf-utils

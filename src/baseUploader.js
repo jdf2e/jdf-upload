@@ -14,9 +14,11 @@ module.exports = class BaseUploader {
     return this.upload(this.options.root, this.options.target, upPath)
       .then(() => {
         const remotePath = base.pathJoin(this.options.host, this.options.target);
-        logger.info(`upload to ${remotePath} success!`);
+        logger.info(`upload to ${remotePath} success`);
       })
-      .catch(logger.error);
+      .catch((err) => {
+        logger.error(err);
+      });
   }
 
   /**
