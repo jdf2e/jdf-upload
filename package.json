@@ -1,6 +1,6 @@
 {
   "name": "jdf-upload",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "jdf upload module",
   "main": "index.js",
   "repository": {
