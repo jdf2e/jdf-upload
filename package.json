@@ -28,7 +28,7 @@
   "dependencies": {
     "fs-path": "0.0.22",
     "glob": "^7.1.1",
-    "jdf-log": "0.0.2",
+    "jdf-log": "^0.0.4",
     "jdf-utils": "^1.0.8",
     "readable-stream": "1.1.14",
     "request": "^2.78.0",
