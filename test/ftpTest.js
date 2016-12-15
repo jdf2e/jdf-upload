@@ -50,7 +50,7 @@ describe('src/ftp', () => {
     applyed = false;
   });
 
-  describe('getFiles()', () => {
+  describe.skip('getFiles()', () => {
     it('返回某个目录下要上传的文件信息', () => {
       // ftp的文件信息包含文件和文件夹
       const upFiles = uploader.getFiles(config.root, config.target, ['widget', './js/']);

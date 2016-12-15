@@ -16,12 +16,9 @@ module.exports = class Http extends Base {
     logger.debug('http mode used');
   }
 
-  upload(root, target, upPath) {
-    let uploadGlob = this.getUploadInfo(upPath).map(info => info.glob);
-    uploadGlob = uploadGlob.length > 1 ? `{${uploadGlob.join(',')}}` : uploadGlob[0];
-
+  upload(root, target) {
     return new Promise((resolve, reject) => {
-      glob(uploadGlob, {
+      glob('**', {
         cwd: root,
         nodir: true,
       }, (err, files) => {

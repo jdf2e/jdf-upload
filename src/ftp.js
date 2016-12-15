@@ -159,11 +159,8 @@ module.exports = class Ftp extends Base {
     });
   }
 
-  upload(root, target, upPath) {
-    const files = this.getFiles(root, target, upPath);
-    // files.forEach(function(file) {
-    //     console.log(file.source, file.target);
-    // });return;
+  upload(root, target) {
+    const files = this.getFiles(root, target);
     // 远程先创建文件夹，再创建文件
     return new Promise((resolve) => {
       this.connect()
@@ -188,13 +185,9 @@ module.exports = class Ftp extends Base {
    * 遍历本地文件，获取所有的文件和文件夹，类似walk的功能
    * @param root
    * @param target
-   * @param upPath
    */
-  getFiles(root, target, upPath) {
-    let uploadGlob = this.getUploadInfo(upPath).map(info => info.glob);
-    uploadGlob = uploadGlob.length > 1 ? `{${uploadGlob.join(',')}}` : uploadGlob[0];
-
-    const files = glob.sync(uploadGlob, {
+  getFiles(root, target) {
+    const files = glob.sync('**', {
       cwd: root,
       mark: true,
     });

@@ -25,7 +25,7 @@ describe('src/baseUploader',() => {
     });
   });
 
-  describe('getUploadInfo(upPath)', () => {
+  describe.skip('getUploadInfo(upPath)', () => {
     const instance = Base.create('ftp', utils.defaultConfig('ftp'));
 
     it('默认路径，返回改路径对应的信息', () => {
