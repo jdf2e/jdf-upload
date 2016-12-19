@@ -12,7 +12,7 @@ chai.should();
 chai.use(require('chai-properties'));
 
 describe('src/http', () => {
-  describe('upload()', () => {
+  describe.skip('upload()', () => {
     let post, props;
     const config = utils.defaultConfig('http');
     const uploader = Base.create('http', config);

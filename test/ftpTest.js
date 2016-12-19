@@ -75,7 +75,7 @@ describe('src/ftp', () => {
     });
   });
 
-  describe('upload()', () => {
+  describe.skip('upload()', () => {
 
     describe('上传文件夹', () => {
       const files = [

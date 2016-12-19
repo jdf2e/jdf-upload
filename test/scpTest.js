@@ -14,7 +14,7 @@ chai.use(sinonChai);
 chai.use(require('chai-properties'));
 
 describe('src/scp', () => {
-  describe('upload()', () => {
+  describe.skip('upload()', () => {
     const config = utils.defaultConfig('scp');
     const uploader = Base.create('scp', config);
 
