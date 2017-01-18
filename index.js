@@ -25,9 +25,7 @@ module.exports = function(dir, options, jdf) {
 
   // 如果没有配置过上传的参数，也退出
   for (const k of ['host', 'user', 'password']) { // eslint-disable-line
-    if (jdf.config[k] === JSON.parse(jdf.config.configJsonFileContent)[k]
-      ||
-      (!jdf.config[k] && !jdf.config.upload[k])) {
+    if (!jdf.config[k] && !jdf.config.upload[k]) {
       logger.error(`config.json value of "${k}" error`);
       return;
     }
