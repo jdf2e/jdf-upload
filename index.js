@@ -15,7 +15,7 @@ module.exports = function(dir, options, jdf) {
     logger.level(options.logLevel);
   }
 
-  const type = options.type || jdf.upload.type;
+  const type = jdf.config.upload.type || options.type;
 
   // 如果输入的上传类型不对就退出
   if (['ftp', 'scp', 'http'].indexOf(type) === -1) {
